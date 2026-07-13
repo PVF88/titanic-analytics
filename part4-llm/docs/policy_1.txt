@@ -1,0 +1,8 @@
+Remote Work Policy (Excerpt)
+
+Employees may work remotely up to three days per week with manager approval.
+Core hours are from 10:00 to 16:00 local time where the employee must be reachable.
+All remote work must follow the company security guidelines:
+- Use a company-approved VPN
+- Do not share passwords or access tokens
+- Keep devices updated with the latest security patches
