@@ -4,13 +4,13 @@ This repository contains a full end‑to‑end data science and analytics projec
 
 ## Project Overview
 
-The goal of this project is to explore passenger survival on the Titanic and demonstrate a modern analytics workflow: preparing raw data, training predictive models, building an interactive dashboard for insights, and exposing the project via a language model interface.[page:1] The code is organized into four main parts plus a setup guide to help you get started quickly.
+The goal of this project is to explore passenger survival on the Titanic and demonstrate a modern analytics workflow: preparing raw data, training predictive models, building an interactive dashboard for insights, and exposing the project via a language model interface. The code is organized into four main parts plus a setup guide to help you get started quickly.
 
 ## Repository Structure
 
-- `part1-data-cleaning`: Notebooks and scripts for data ingestion, cleaning, exploration, and feature engineering on the Titanic dataset.[page:1]
-- `part2-model`: Model training, evaluation, and experimentation (e.g., classification models to predict passenger survival).[page:1]
-- `part3-dashboard`: Code for building an interactive dashboard that visualizes key features, survival patterns, and model outputs.[page:1]
+- `part1-data-cleaning`: Notebooks and scripts for data ingestion, cleaning, exploration, and feature engineering on the Titanic dataset.
+- `part2-model`: Model training, evaluation, and experimentation (e.g., classification models to predict passenger survival).
+- `part3-dashboard`: Code for building an interactive dashboard that visualizes key features, survival patterns, and model outputs.
 - `part4-llm`: An LLM-based app that lets users ask natural-language questions about the data, analysis, and results.
 - `SETUP_GUIDE.md`: A detailed setup and environment guide for running each project component locally.
 
