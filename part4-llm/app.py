@@ -81,9 +81,10 @@ def search_documents_optimized(index, documents, query):
 # OPTIMIZATION 4: Simulated LLM query (would use OpenAI API in production)
 def query_llm(prompt):
     """Simulate LLM query - in production would call OpenAI API"""
+    # TODO: Replace with real LLM API (OpenAI, Hugging Face, etc.)
     # Simulate API latency
     time.sleep(0.3)
-    return f"Response to your question: {prompt[:80]}..."
+    return f"[DEMO RESPONSE] Response to your question: {prompt[:80]}..."
 
 # OPTIMIZATION 5: Cache LLM queries with session state
 def get_cached_response(question, documents, index):
@@ -129,7 +130,17 @@ def get_cached_response(question, documents, index):
 @st.cache_data
 def load_data():
     """Load and cache Titanic data"""
-    df = pd.read_csv('../part1-data-cleaning/data_clean/titanic_clean.csv')
+    # Resolve path relative to this script, not the working directory
+    script_dir = Path(__file__).parent.resolve()
+    data_path = script_dir.parent / 'part1-data-cleaning' / 'data_clean' / 'titanic_clean.csv'
+    
+    if not data_path.exists():
+        raise FileNotFoundError(
+            f"Titanic data not found at {data_path}.\n"
+            f"Ensure part1-data-cleaning/data_clean/titanic_clean.csv exists relative to the project root."
+        )
+    
+    df = pd.read_csv(data_path)
     return df
 
 # OPTIMIZATION 7: Cache data statistics
@@ -147,20 +158,31 @@ def main():
     st.set_page_config(page_title="Titanic LLM Q&A (Optimized)", layout="wide")
     st.title("🚢 Titanic LLM Q&A with Documents (Optimized)")
     
+    # Demo notice
+    st.warning("🤖 **This is a DEMO** — LLM responses are simulated. Replace `query_llm()` with a real API (OpenAI, Hugging Face, etc.) for production use.")
+    
     # OPTIMIZATION: Load documents (cached)
     documents = load_documents()
-    st.write(f"✅ Loaded {len(documents)} documents (cached)")
+    if not documents:
+        st.warning("⚠️ No documents found in docs/ directory. The Q&A feature will not work.")
+        st.info("📁 Place .txt files in the `docs/` directory (e.g., policy_1.txt, faq.txt)")
+    else:
+        st.write(f"✅ Loaded {len(documents)} documents (cached)")
     
     # OPTIMIZATION: Build index (cached)
     index = build_index(documents)
     st.write("✅ Built keyword index (cached)")
     
     # OPTIMIZATION: Load data (cached)
-    df = load_data()
-    st.write(f"✅ Data shape: {df.shape} (cached)")
-    
-    # OPTIMIZATION: Compute stats (cached)
-    stats = compute_data_stats(df)
+    try:
+        df = load_data()
+        st.write(f"✅ Data shape: {df.shape} (cached)")
+        
+        # OPTIMIZATION: Compute stats (cached)
+        stats = compute_data_stats(df)
+    except Exception as e:
+        st.warning(f"Could not load data: {e}")
+        stats = None
     
     # Ask questions
     st.header("Ask Questions About Titanic")
@@ -185,17 +207,18 @@ def main():
                 st.write(result['content'])
     
     # Data statistics section
-    st.header("📊 Data Summary")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Total Records", stats['total_records'])
-    with col2:
-        st.metric("Survivors", stats['survivors'])
-    with col3:
-        st.metric("Avg Age", f"{stats['avg_age']:.1f}")
-    with col4:
-        st.metric("Avg Fare", f"${stats['avg_fare']:.2f}")
+    if stats:
+        st.header("📊 Data Summary")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Total Records", stats['total_records'])
+        with col2:
+            st.metric("Survivors", stats['survivors'])
+        with col3:
+            st.metric("Avg Age", f"{stats['avg_age']:.1f}")
+        with col4:
+            st.metric("Avg Fare", f"${stats['avg_fare']:.2f}")
     
     # Performance summary
     st.sidebar.markdown("---")
