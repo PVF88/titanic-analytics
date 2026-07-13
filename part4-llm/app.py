@@ -156,11 +156,15 @@ def main():
     st.write("✅ Built keyword index (cached)")
     
     # OPTIMIZATION: Load data (cached)
-    df = load_data()
-    st.write(f"✅ Data shape: {df.shape} (cached)")
-    
-    # OPTIMIZATION: Compute stats (cached)
-    stats = compute_data_stats(df)
+    try:
+        df = load_data()
+        st.write(f"✅ Data shape: {df.shape} (cached)")
+        
+        # OPTIMIZATION: Compute stats (cached)
+        stats = compute_data_stats(df)
+    except Exception as e:
+        st.warning(f"Could not load data: {e}")
+        stats = None
     
     # Ask questions
     st.header("Ask Questions About Titanic")
@@ -185,17 +189,18 @@ def main():
                 st.write(result['content'])
     
     # Data statistics section
-    st.header("📊 Data Summary")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Total Records", stats['total_records'])
-    with col2:
-        st.metric("Survivors", stats['survivors'])
-    with col3:
-        st.metric("Avg Age", f"{stats['avg_age']:.1f}")
-    with col4:
-        st.metric("Avg Fare", f"${stats['avg_fare']:.2f}")
+    if stats:
+        st.header("📊 Data Summary")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Total Records", stats['total_records'])
+        with col2:
+            st.metric("Survivors", stats['survivors'])
+        with col3:
+            st.metric("Avg Age", f"{stats['avg_age']:.1f}")
+        with col4:
+            st.metric("Avg Fare", f"${stats['avg_fare']:.2f}")
     
     # Performance summary
     st.sidebar.markdown("---")
